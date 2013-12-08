@@ -26,9 +26,9 @@ componer' :: String -> IO ()
 componer' dir = do
   (seqs, filenames) <- loadMusicXmls dir
   -- let modelo = ...
-  -- let composicion = ...
+  let composicion = (seqs, filenames)
   putStrLn $ show composicion
-  play $ sequenceToMusic composicion
+  --play $ sequenceToMusic composicion
 
 {- Recupera las diez secuencias más similares a la k-ésima secuencia 
    de la colección musical en el directorio por defecto, donde la 
@@ -38,7 +38,7 @@ componer' dir = do
    el número de la secuencia (relativo al orden alfabético de la 
    colección), el nombre de archivo y la distancia a la consulta.
    -}
-buscar :: Int -> IO ()
+{- buscar :: Int -> IO ()
 buscar = buscar' directorio
   
 buscar' :: String -> Int -> IO ()
@@ -46,7 +46,7 @@ buscar' dir = do
   seqfns <- loadMusicXmls dir
   let seqfns_ordenados = unzip $ sortBy (compare `on` snd) $ zip seqfns
   -- ...
-
+-}
 tocar :: Int -> IO ()
 tocar n = do
   seqfns <- loadMusicXmls directorio
@@ -68,3 +68,4 @@ sequenceToMusic :: [Evento] -> Music Note1
 sequenceToMusic es = line $ map eventToNote es
 
 main :: IO()
+main = componer
