@@ -14,33 +14,37 @@ import Data.Function
  - de ocurrencia condicional).
  -}
 
-type Proba = (Evento, Integer)		-- Este es un tipo auxiliar para poder visualizar las operaciones a realizar
+type Proba = (Evento, Integer)						-- Este es un tipo auxiliar para poder visualizar las operaciones a realizar
 
 eveIgual :: Evento -> Proba -> Bool
 eveIgual e p = (e == fst p)
 
-type ModeloK1 = [Proba]	-- Un evento y su proba de ocurrir
+type ModeloK1 = [Proba]							-- Un evento y su proba de ocurrir
 
 listEvent:: ModeloK1 -> [Evento]
 listEvent m = map fst m
 
-igual :: Evento -> Evento -> Bool
-igual a b = (((fst a) == (fst b)) && ((snd a) == (snd b)))
-
 eveEnMod ::ModeloK1 -> Evento -> Bool
-eveEnMod m e = head $ filter (==True) (map (eveIgual e) m)   -- Ya ni se que me vendieron por cigarros en la panaderia.
+eveEnMod m e = head $ filter (==True) (map (eveIgual e) m)   		-- Ya ni se que me vendieron por cigarros en la panaderia.
 
-
-
-type ModeloK2 = [(Evento, Proba)] -- Un evento y su proba de ocurrir dado un evento previo
 
 addEvent:: ModeloK1 -> Evento -> ModeloK1
 addEvent m e = if (elem e $ listEvent m) 
 		then (filter (not.eveIgual e) m) ++ [(e , (snd.head $ (filter (eveIgual e) m)) + 1)]
 		else m ++ [(e,1)]
 
+type ProbaCond = (Evento, Proba)
 
--- addEvent:: (Evento a) => modeloK2 -> a -> a -> odeloK2
+condIgual :: Evento -> Evento -> ProbaCond -> Bool
+condIgual e1 e2 pc = (e1 == (fst pc)) && (eveIgual e2 (snd pc))
+
+type ModeloK2 = [ProbaCond] 					-- Un evento y su proba de ocurrir dado un evento previo
+
+eveCondIgual :: ProbaCond -> ProbaCond -> Bool
+eveCondIgual a b = ((fst a)==(fst b)) && ((fst $ snd a)== (fst $ snd b))
+
+addEvent2 :: ModeloK2 -> Evento -> Evento -> ModeloK2 			-- Añade la probabilidad de un evento dado otro evento
+addEvent2 m ePrev eAct = []
 
 -- Directorio predeterminado
 directorio :: String
