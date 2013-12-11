@@ -14,33 +14,33 @@ import Data.Function
  - de ocurrencia condicional).
  -}
 
-type proba = (Evento, Integer)		-- Este es un tipo auxiliar para poder visualizar las operaciones a realizar
+type Proba = (Evento, Integer)		-- Este es un tipo auxiliar para poder visualizar las operaciones a realizar
 
-eveIgual ::(Evento e) =>  proba -> e -> Bool
-eveIgual p e = (e == fst proba)
+eveIgual :: Evento -> Proba -> Bool
+eveIgual e p = (e == fst p)
 
-type modeloK1 = [proba]	-- Un evento y su proba de ocurrir
+type ModeloK1 = [Proba]	-- Un evento y su proba de ocurrir
 
-listEvent:: modeloK1 -> [Evento]
+listEvent:: ModeloK1 -> [Evento]
 listEvent m = map fst m
 
-igual :: (Evento a) => a -> a -> Bool
+igual :: Evento -> Evento -> Bool
 igual a b = (((fst a) == (fst b)) && ((snd a) == (snd b)))
 
-eveEnMod :: (Evento e) => modeloK1 -> e -> Bool
+eveEnMod ::ModeloK1 -> Evento -> Bool
 eveEnMod m e = head $ filter (==True) (map (eveIgual e) m)   -- Ya ni se que me vendieron por cigarros en la panaderia.
 
 
 
-type modeloK2 = [(Evento, Evento, Integer)] -- Un evento y su proba de ocurrir dado un evento previo
+type ModeloK2 = [(Evento, Proba)] -- Un evento y su proba de ocurrir dado un evento previo
 
-addEvent:: (Evento a) => modeloK1 -> a -> modeloK1
-addEvent m e = 
-	|(elem e listEvent m) = (filter (not eveIgual e) m) ++ (e, (snd $ filter (eveIgual e) m) + 1)
-	|otherwise = m ++ (e,1)
+addEvent:: ModeloK1 -> Evento -> ModeloK1
+addEvent m e = if (elem e $ listEvent m) 
+		then (filter (not.eveIgual e) m) ++ [(e , (snd.head $ (filter (eveIgual e) m)) + 1)]
+		else m ++ [(e,1)]
 
 
-addEvent:: (Evento a) => modeloK2 -> a -> a -> modeloK2
+-- addEvent:: (Evento a) => modeloK2 -> a -> a -> odeloK2
 
 -- Directorio predeterminado
 directorio :: String
