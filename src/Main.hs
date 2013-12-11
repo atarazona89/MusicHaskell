@@ -6,6 +6,42 @@ import Euterpea hiding (Event)
 import Data.List
 import Data.Function
 
+{- Esto es lo que yo (Alejandro) he agregado
+ - tomando en cuenta los modelos que debemos generar
+ - me di cuenta que debemos manejar dos tipos nuevos
+ - de datos, los llamé "modeloK1" (modelo de probabilidad
+ - de ocurrencia somple) y modeloK2 (modelo de probabilidad
+ - de ocurrencia condicional).
+ -}
+
+type proba = (Evento, Integer)		-- Este es un tipo auxiliar para poder visualizar las operaciones a realizar
+
+eveIgual ::(Evento e) =>  proba -> e -> Bool
+eveIgual p e = (e == fst proba)
+
+type modeloK1 = [proba]	-- Un evento y su proba de ocurrir
+
+listEvent:: modeloK1 -> [Evento]
+listEvent m = map fst m
+
+igual :: (Evento a) => a -> a -> Bool
+igual a b = (((fst a) == (fst b)) && ((snd a) == (snd b)))
+
+eveEnMod :: (Evento e) => modeloK1 -> e -> Bool
+eveEnMod m e = head $ filter (==True) (map (eveIgual e) m)   -- Ya ni se que me vendieron por cigarros en la panaderia.
+
+
+
+type modeloK2 = [(Evento, Evento, Integer)] -- Un evento y su proba de ocurrir dado un evento previo
+
+addEvent:: (Evento a) => modeloK1 -> a -> modeloK1
+addEvent m e = 
+	|(elem e listEvent m) = (filter (not eveIgual e) m) ++ (e, (snd $ filter (eveIgual e) m) + 1)
+	|otherwise = m ++ (e,1)
+
+
+addEvent:: (Evento a) => modeloK2 -> a -> a -> modeloK2
+
 -- Directorio predeterminado
 directorio :: String
 directorio = "./xml/"
